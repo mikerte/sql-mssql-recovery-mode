@@ -1,0 +1,8 @@
+SELECT name, recovery_model_desc,
+CASE
+    WHEN recovery_model_desc = 'SIMPLE' THEN 'ALTER DATABASE ' + name + ' SET RECOVERY FULL;'
+    ELSE NULL
+END AS AlterStatement
+FROM sys.databases
+WHERE name NOT IN ('master', 'model', 'tempdb')
+ORDER BY CASE WHEN recovery_model_desc = 'SIMPLE' THEN 0 ELSE 1 END, name;
